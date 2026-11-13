@@ -19,4 +19,32 @@ public class AchievementTracker {
         return true;
 
     }
+    public boolean removeGame(int appId) {
+        int index = -1;
+
+        for (int i = 0; i < games.size(); i++) {
+            if (appId == games.get(i).getId()) {
+                index = i;
+                break;
+            }
+        }
+        if (index == -1) {
+            return false;
+        }
+        games.remove(index);
+        return true;
+
+    }
+
+    public Game getGame(int appId) {
+        for (int i = 0; i < games.size(); i++) {
+            if (games.get(i).getId() == appId) {
+
+                return games.get(i);            
+            }
+        }
+
+        return null;
+    }
+
 }
