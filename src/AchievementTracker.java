@@ -47,4 +47,7 @@ public class AchievementTracker {
         return null;
     }
 
+    public ArrayList<Game> getGames() {
+        return games;
+    }
 }
