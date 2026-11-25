@@ -11,10 +11,8 @@ public class Main {
         while (true) {
             try {
                 IO.println("""
-                ========================================
-                            ACHIEVEMENTHUB
-                ========================================
-
+                
+                ACHIEVEMENTHUB
                 1. View Game Library
                 2. Add Game
                 3. View Game Achievements
@@ -22,7 +20,6 @@ public class Main {
                 5. Remove Game
                 6. Exit
 
-                ========================================
                 Enter your choice (1-6):""");
 
                 int choice = Integer.parseInt(IO.readln());
@@ -32,14 +29,14 @@ public class Main {
                     if (games.isEmpty()) {
                         IO.println("No Games Added");
                     } else {
-                        IO.println("========== GAME LIBRARY ==========");
+                        IO.println("GAME LIBRARY");
 
                         for (int i = 0; i < games.size(); i++) {
                             IO.println(games.get(i).getGameName());
                             IO.println("App ID: " + games.get(i).getId());
                         }
 
-                        IO.println("==================================");
+                        IO.println();
                     }
                 } else if (choice == 2) {
                     String gameName = IO.readln("Enter Game Name:\n");
