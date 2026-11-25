@@ -4,6 +4,9 @@ public class Main {
     public static void main(String[] args) {
         
         AchievementTracker tracker = new AchievementTracker();
+        GameStorage storage = new GameStorage();
+
+        storage.loadGames(tracker);
         
         while (true) {
             try {
@@ -45,6 +48,7 @@ public class Main {
                     boolean valid = tracker.addGame(gameName, appId);
 
                     if (valid) {
+                        storage.saveGames(tracker);
                         IO.println("Game successfully added to your library");
                     } else {
                         IO.println("This game is already in your library");
@@ -59,6 +63,7 @@ public class Main {
                     boolean valid = tracker.removeGame(appId);
 
                     if (valid) {
+                        storage.saveGames(tracker);
                         IO.println("Game successfully removed from your library");
                     } else {
                         IO.println("This game is not in your library");
