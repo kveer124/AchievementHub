@@ -1,13 +1,51 @@
 import java.util.ArrayList;
+import java.io.Console;
 
 public class Main {
+    public static void refreshAchievements(SteamAPI api, AchievementTracker tracker) {
+        IO.println("REFRESH ACHIEVEMENTS");
+
+        ArrayList<Game> games = tracker.getGames();
+        if (games.isEmpty()) {
+            IO.println("No Games Added");
+        } else {
+            for (int i = 0; i < games.size(); i++) {
+                ArrayList<Achievement> newAchievements = api.getAchievements(games.get(i).getId());
+
+                if (newAchievements != null) {
+                    games.get(i).setAchievements(newAchievements);
+                    IO.println(games.get(i).getGameName() + ": Successfully Refreshed");
+
+                } else {
+                    IO.println(games.get(i).getGameName() + ": Unable to retrieve achievements");
+                }
+            }
+            IO.println("Refresh Complete");
+
+        }
+    }
+
     public static void main(String[] args) {
         
         AchievementTracker tracker = new AchievementTracker();
         GameStorage storage = new GameStorage();
+        Console console = System.console();
+        if (console == null) {
+            IO.println("No console available. Please run AchievementHub in a terminal.");
+            return;
+        }
+
+        
 
         storage.loadGames(tracker);
-        
+        char[] apiKey = console.readPassword("Enter your API Key: ");
+        char[] userId = console.readPassword("Enter your User ID : ");
+        String stringApiKey = new String(apiKey);
+        String stringUserId = new String(userId);
+
+        SteamAPI api = new SteamAPI(stringApiKey, stringUserId);
+        refreshAchievements(api, tracker);
+
         while (true) {
             try {
                 IO.println("""
@@ -34,6 +72,8 @@ public class Main {
                         for (int i = 0; i < games.size(); i++) {
                             IO.println(games.get(i).getGameName());
                             IO.println("App ID: " + games.get(i).getId());
+                            IO.println("Completion: " + String.format("%.2f%%", games.get(i).getCompletion()));
+
                         }
 
                         IO.println();
@@ -46,13 +86,51 @@ public class Main {
 
                     if (valid) {
                         storage.saveGames(tracker);
+                        Game game = tracker.getGame(appId);
                         IO.println("Game successfully added to your library");
+                        ArrayList<Achievement> newAchievements = api.getAchievements(appId);
+
+                        if (newAchievements != null) {
+                            game.setAchievements(newAchievements);
+                        } else {
+                            IO.println("Unable to retrieve achievements");
+                        }
+
                     } else {
                         IO.println("This game is already in your library");
                     }
                 } else if (choice == 3) {
-                    
+                    int appId = Integer.parseInt(IO.readln("Enter the Game's App Id:\n"));
+                    Game game = tracker.getGame(appId);
+                    if (game != null) {
+                        if (game.getAchievements().isEmpty()) {
+                            ArrayList<Achievement> newAchievements = api.getAchievements(appId);
+
+                            if (newAchievements != null) {
+                                game.setAchievements(newAchievements);
+                            } else {
+                                IO.println("Unable to retrieve achievements");
+                                continue;
+                            }
+                        }
+
+                        IO.println("GAME ACHIEVEMENTS");
+                        IO.println(game.getGameName());
+                        IO.println("App ID: " + game.getId());
+                        IO.println("Completion: " + String.format("%.2f%%", game.getCompletion()));
+
+                        for (int i = 0; i < game.getAchievements().size(); i++) {
+                            if (game.getAchievements().get(i).isUnlocked()) {
+                                IO.println("[UNLOCKED] " + game.getAchievements().get(i).getAchieveName());
+                            } else {
+                                IO.println("[LOCKED] " + game.getAchievements().get(i).getAchieveName());
+                            }
+                        }
+                    } else {
+                        IO.println("The game is not in the library");
+                    }
                 } else if (choice == 4) {
+                    refreshAchievements(api, tracker);
                     
                 } else if (choice == 5) {
                     int appId = Integer.parseInt(IO.readln("Enter the Game's App Id:\n"));
