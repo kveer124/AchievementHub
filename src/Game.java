@@ -4,6 +4,7 @@ public class Game {
     private int appId;
     private String gameName;
     private ArrayList<Achievement> achievements = new ArrayList<>();
+    private boolean achievementsLoaded;
 
     public Game(int appId, String gameName) {
         this.appId = appId;
@@ -24,6 +25,7 @@ public class Game {
 
     public void setAchievements(ArrayList<Achievement> achievements) {
         this.achievements = achievements;
+        achievementsLoaded = true;
     }
 
     public double getCompletion() {
@@ -44,6 +46,10 @@ public class Game {
         } else {
             return percent;
         }
+    }
+
+    public boolean getAchievementsLoaded() {
+        return achievementsLoaded;
     }
 
 }

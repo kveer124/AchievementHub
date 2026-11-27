@@ -72,7 +72,11 @@ public class Main {
                         for (int i = 0; i < games.size(); i++) {
                             IO.println(games.get(i).getGameName());
                             IO.println("App ID: " + games.get(i).getId());
-                            IO.println("Completion: " + String.format("%.2f%%", games.get(i).getCompletion()));
+                            if (games.get(i).getAchievementsLoaded()) {
+                                IO.println("Completion: " + String.format("%.2f%%", games.get(i).getCompletion()));
+                            } else {
+                                IO.println("Completion: Not Loaded");
+                            }
 
                         }
 
@@ -103,16 +107,15 @@ public class Main {
                     int appId = Integer.parseInt(IO.readln("Enter the Game's App Id:\n"));
                     Game game = tracker.getGame(appId);
                     if (game != null) {
-                        if (game.getAchievements().isEmpty()) {
-                            ArrayList<Achievement> newAchievements = api.getAchievements(appId);
+                        ArrayList<Achievement> newAchievements = api.getAchievements(appId);
 
-                            if (newAchievements != null) {
-                                game.setAchievements(newAchievements);
-                            } else {
-                                IO.println("Unable to retrieve achievements");
-                                continue;
-                            }
+                        if (newAchievements != null) {
+                            game.setAchievements(newAchievements);
+                        } else {
+                            IO.println("Unable to retrieve achievements");
+                            continue;
                         }
+                        
 
                         IO.println("GAME ACHIEVEMENTS");
                         IO.println(game.getGameName());
