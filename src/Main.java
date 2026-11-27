@@ -70,6 +70,7 @@ public class Main {
                         IO.println("GAME LIBRARY");
 
                         for (int i = 0; i < games.size(); i++) {
+                            IO.println();
                             IO.println(games.get(i).getGameName());
                             IO.println("App ID: " + games.get(i).getId());
                             if (games.get(i).getAchievementsLoaded()) {
