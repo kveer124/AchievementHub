@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-//Game class
 public class Game {
     private int appId;
     private String gameName;

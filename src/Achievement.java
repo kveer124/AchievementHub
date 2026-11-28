@@ -1,4 +1,3 @@
-// Achievement class
 public class Achievement {
     private String achieveName;
     private boolean unlocked;

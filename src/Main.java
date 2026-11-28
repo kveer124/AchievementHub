@@ -11,8 +11,9 @@ public class Main {
             IO.println("No Games Added");
         } else {
             for (int i = 0; i < games.size(); i++) {
-                ArrayList<Achievement> newAchievements = api.getAchievements(games.get(i).getId());
 
+                ArrayList<Achievement> newAchievements = api.getAchievements(games.get(i).getId());
+                // Keep the old achievements if Steam doesn't load new ones.
                 if (newAchievements != null) {
                     games.get(i).setAchievements(newAchievements);
                     IO.println(games.get(i).getGameName() + ": Successfully Refreshed");
@@ -64,6 +65,7 @@ public class Main {
                 int choice = Integer.parseInt(IO.readln());
 
                 if (choice == 1) { 
+                    // Sort a copy so the default order stays the same.
                     ArrayList<Game> games = new ArrayList<>(tracker.getGames());
                     if (games.isEmpty()) {
                         IO.println("No Games Added");
@@ -77,7 +79,7 @@ public class Main {
                                 """);
 
                         int sortChoice = Integer.parseInt(IO.readln("Enter your choice: "));
-
+                        // Keep games that haven't loaded at the bottom either way.
                         if (sortChoice == 2) {
                             games.sort(Comparator.comparing(Game::getAchievementsLoaded)
                                     .reversed()
