@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 import java.io.Console;
+import java.util.Comparator;
 
 public class Main {
     public static void refreshAchievements(SteamAPI api, AchievementTracker tracker) {
@@ -63,10 +64,32 @@ public class Main {
                 int choice = Integer.parseInt(IO.readln());
 
                 if (choice == 1) { 
-                    ArrayList<Game> games = tracker.getGames();
+                    ArrayList<Game> games = new ArrayList<>(tracker.getGames());
                     if (games.isEmpty()) {
                         IO.println("No Games Added");
                     } else {
+                        IO.println("""
+                                SORT GAME LIBRARY
+
+                                1. Default Order
+                                2. Highest Completion First
+                                3. Lowest Completion First
+                                """);
+
+                        int sortChoice = Integer.parseInt(IO.readln("Enter your choice: "));
+
+                        if (sortChoice == 2) {
+                            games.sort(Comparator.comparing(Game::getAchievementsLoaded)
+                                    .reversed()
+                                    .thenComparing(Comparator.comparingDouble(Game::getCompletion).reversed()));
+                        } else if (sortChoice == 3) {
+                            games.sort(Comparator.comparing(Game::getAchievementsLoaded)
+                                    .reversed()
+                                    .thenComparingDouble(Game::getCompletion));
+                        } else if (sortChoice != 1) {
+                            IO.println("Invalid option");
+                            continue;
+                        }
                         IO.println("GAME LIBRARY");
 
                         for (int i = 0; i < games.size(); i++) {
